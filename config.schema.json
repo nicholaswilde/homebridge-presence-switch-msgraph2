@@ -3,7 +3,7 @@
   "pluginAlias": "presence-switch",
   "pluginType": "accessory",
   "singular": false,
-  "headerDisplay": "Microsoft Graph Presence Switch",
+  "headerDisplay": "Busy Flag Presence Switch",
   "footerDisplay": "Plugin which allows you retrieve your presence via the Microsoft Graph and call your busy flag API.",
   "schema": {
     "$schema": "http://json-schema.org/draft-07/schema",
@@ -11,6 +11,8 @@
     "required": [
       "name",
       "appId",
+      "upApi",
+      "downApi",
       "setColorApi",
       "offApi",
       "onApi"
@@ -27,6 +29,30 @@
         "type": "string",
         "default": "66204339-daf1-40fa-aa31-57342272edce"
       },
+      "hostname": {
+        "title": "Hostname",
+        "description": "Hostname which serves the API",
+        "type": "string",
+        "default": "192.168.1.192"
+      },
+      "port": {
+        "title": "Port",
+        "description": "Port which serves the API",
+        "type": "integer",
+        "default": 5000
+      },
+      "upApi": {
+        "title": "Up API",
+        "description": "API to turn up your device",
+        "type": "string",
+        "default": "http://192.168.1.192:5000/api/up/"
+      },
+      "downApi": {
+        "title": "Down API",
+        "description": "API to turn down your device",
+        "type": "string",
+        "default": "http://192.168.1.192:5000/api/down"
+      },
       "interval": {
         "title": "Interval",
         "description": "Polling interval.",
@@ -36,29 +62,32 @@
       "setColorApi": {
         "title": "Set color API",
         "description": "API to set the color",
-        "type": "string"
+        "type": "string",
+        "default": "http://192.168.1.192:5000/api/switch"
       },
       "offApi": {
         "title": "Off API",
         "description": "API to turn off your device",
-        "type": "string"
+        "type": "string",
+        "default": "http://192.168.1.192:5000/api/off"
       },
       "onApi": {
         "title": "On API",
         "description": "API to turn on your device",
-        "type": "string"
+        "type": "string",
+        "default": "http://192.168.1.192:5000/api/on"
       },
       "startTime": {
         "title": "Start time",
         "description": "Define the time when you start your working day (ex: 8:30).",
         "type": "string",
-        "default": ""
+        "default": "8:30"
       },
       "endTime": {
         "title": "End time",
         "description": "Define the time when you end your working day (ex: 18:00).",
         "type": "string",
-        "default": ""
+        "default": "18:00"
       },
       "weekend": {
         "title": "Weekend checks",
