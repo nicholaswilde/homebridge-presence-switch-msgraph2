@@ -1,4 +1,5 @@
-# Presence switch connected to Microsoft Graph
+# Homebridge Busy Flag
+## Presence switch connected to Microsoft Graph
 
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins) 
 [![homebridge-presence-switch-msgraph](https://badgen.net/npm/v/homebridge-presence-switch-msgraph)](https://www.npmjs.com/package/homebridge-presence-switch-msgraph)
