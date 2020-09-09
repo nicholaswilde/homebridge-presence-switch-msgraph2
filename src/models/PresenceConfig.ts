@@ -4,6 +4,10 @@ export interface PresenceConfig {
   name: string;
   accessory: string;
   appId: string;
+  hostname: string;
+  port: number;
+  upApi: string;
+  downApi: string;
   interval: number;
   setColorApi: string;
   offApi: string;

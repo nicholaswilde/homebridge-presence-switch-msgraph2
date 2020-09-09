@@ -3,7 +3,7 @@
 import { Homebridge, HomebridgeAccessory, PresenceConfig, Logger, Presence, Availability, StatusColors, RGB } from '../models';
 import persist from 'node-persist';
 import { Auth, splitHours } from '../helpers';
-import { MsGraphService, BusyLightService } from '../services';
+import { MsGraphService, BusyFlagService } from '../services';
 
 const MSGRAPH_URL = `https://graph.microsoft.com`;
 const MSGRAPH_PRESENCE_PATH = `beta/me/presence`;
@@ -42,6 +42,10 @@ export class PresenceAccessory implements HomebridgeAccessory {
     name: null,
     accessory: null,
     appId: null,
+    hostname: null,
+    port: 5000,
+    upApi: null,
+    downApi: null,
     interval: 1, // Every minute
     setColorApi: null,
     offApi: null,
@@ -56,10 +60,10 @@ export class PresenceAccessory implements HomebridgeAccessory {
   
   /**
    * Initialize the accessory registration
-   * 
-   * @param homebridge 
-   * @param packageJSON 
-   * @param platformName 
+   *
+   * @param homebridge
+   * @param packageJSON
+   * @param platformName
    */
   public static register(homebridge: Homebridge, packageJSON: any, platformName: string) {
     console.log(`The ${packageJSON.name} plugin version is: ${packageJSON.version}. Installed on Homebridge version: ${homebridge.version}.`);
@@ -117,7 +121,7 @@ export class PresenceAccessory implements HomebridgeAccessory {
       // Turned on
       this.auth = new Auth(this.config.appId, this.storage);
       this.auth.ensureAccessToken(MSGRAPH_URL, this.log, this.config.debug).then(async (accessToken) => {
-        await BusyLightService.get(this.config.onApi, this.log, this.config.debug);
+        await BusyFlagService.get(this.config.onApi, this.log, this.config.debug);
 
         if (accessToken) {
           this.log.info(`Access token acquired.`);
@@ -151,10 +155,10 @@ export class PresenceAccessory implements HomebridgeAccessory {
           if (!color || (!color.red && !color.green && !color.blue)) {
             color = this.defaultColors[availability.toLowerCase()];
           }
-          await BusyLightService.post(this.config.setColorApi, color, this.log, this.config.debug);
+          await BusyFlagService.post(this.config.setColorApi, color, this.log, this.config.debug);
         }
       } else {
-        await BusyLightService.get(this.config.offApi, this.log, this.config.debug);
+        await BusyFlagService.get(this.config.offApi, this.log, this.config.debug);
       }
     }
 
@@ -165,8 +169,8 @@ export class PresenceAccessory implements HomebridgeAccessory {
 
   /**
    * Retrieve the availability status
-   * 
-   * @param presence 
+   *
+   * @param presence
    */
   private getAvailability(presence: Availability) {
     switch(presence) {
@@ -210,7 +214,7 @@ export class PresenceAccessory implements HomebridgeAccessory {
 
     if(!this.config.weekend && (crntDate.getDay() === 6 || crntDate.getDay() === 0)) {
       if (this.config.debug) {
-        this.log.info(`It's weekend, accessory will not set the busy light.`);
+        this.log.info(`It's weekend, accessory will not set the busy flag.`);
       }
       return false;
     }

@@ -1,6 +1,6 @@
 {
-  "name": "homebridge-presence-switch-msgraph2",
-  "version": "0.0.10",
+  "name": "homebridge-busy-flag",
+  "version": "0.0.1",
   "description": "Switch for Microsoft Graph presence status",
   "license": "MIT",
   "keywords": [
@@ -9,14 +9,14 @@
   "author": "Nicholas Wilde",
   "main": "dist/index.js",
   "scripts": {
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "start": "tsc",
     "build": "tsc",
     "publish:next": "npm publish --tag next"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nicholaswilde/homebridge-presence-switch-msgraph2"
+    "url": "https://github.com/nicholaswilde/homebridge-busy-flag"
   },
   "bugs": {},
   "engines": {

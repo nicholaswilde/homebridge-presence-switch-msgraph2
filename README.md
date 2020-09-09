@@ -5,6 +5,17 @@
 [![homebridge-presence-switch-msgraph](https://badgen.net/npm/v/homebridge-presence-switch-msgraph)](https://www.npmjs.com/package/homebridge-presence-switch-msgraph)
 
 More information for now can be found here: [https://www.eliostruyf.com/diy-building-busy-light-show-microsoft-teams-presence/](https://www.eliostruyf.com/diy-building-busy-light-show-microsoft-teams-presence/).
+## Setup
+```bash
+$ npm install
+$ npm run build
+```
+
+When writing your plugin, you'll want Homebridge to load it from your development directory instead of publishing it to npm each time. Run this command inside your plugin project folder so your global install of Homebridge can discover it:
+
+```bash
+$ sudo npm link
+```
 
 ## Local development
 
@@ -12,12 +23,6 @@ More information for now can be found here: [https://www.eliostruyf.com/diy-buil
 $ nvm use v12
 
 % homebridge -D -I -U ~/nodejs/homebridge/homebridge-presence-switch-msgraph/debug -P ~/nodejs/homebridge/homebridge-presence-switch-msgraph
-```
-
-When writing your plugin, you'll want Homebridge to load it from your development directory instead of publishing it to npm each time. Run this command inside your plugin project folder so your global install of Homebridge can discover it:
-
-```bash
-$ sudo npm link
 ```
 
 ## Config

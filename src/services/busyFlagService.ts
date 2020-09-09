@@ -2,7 +2,7 @@ import { Logger } from "../models";
 import fetch from 'node-fetch';
 
 
-export class BusyLightService {
+export class BusyFlagService {
 
   /**
    * Do a get request to the busy light
@@ -12,26 +12,26 @@ export class BusyLightService {
   public static async get(url: string, log: Logger, debug: boolean = false) {
     try {
       if (debug) {
-        log.info(`Calling the busy light API: ${url}`);
+        log.info(`Calling the busy flag API: ${url}`);
       }
       const data = await fetch(url);
       if (debug) {
         log.info(`Call was: ${data.ok}`);
       }
     } catch (error) {
-      log.warn(`Seems to be the busy light API was offline`);
+      log.warn(`Seems to be the busy flag API was offline`);
     }
   }
 
   /**
-   * Do a post request to the busy light
+   * Do a post request to the busy flag
    * 
    * @param url 
    */
   public static async post(url: string, body: any, log: Logger, debug: boolean = false) {
     try {
       if (debug) {
-        log.info(`Calling the busy light API: ${url} - ${JSON.stringify(body)}`);
+        log.info(`Calling the busy flag API: ${url} - ${JSON.stringify(body)}`);
       }
       const data = await fetch(url, { 
         method: "POST", 
@@ -44,7 +44,7 @@ export class BusyLightService {
         log.info(`Call was: ${data.ok}`);
       }
     } catch (error) {
-      log.warn(`Seems to be the busy light API was offline`);
+      log.warn(`Seems to be the busy flag API was offline`);
     }
   }
 }
