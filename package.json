@@ -1,12 +1,12 @@
 {
-  "name": "homebridge-presence-switch-msgraph",
-  "version": "1.2.2",
+  "name": "homebridge-presence-switch-msgraph2",
+  "version": "0.0.10",
   "description": "Switch for Microsoft Graph presence status",
   "license": "MIT",
   "keywords": [
     "homebridge-plugin"
   ],
-  "author": "Elio Struyf",
+  "author": "Nicholas Wilde",
   "main": "dist/index.js",
   "scripts": {
     "prepublish": "npm run build",

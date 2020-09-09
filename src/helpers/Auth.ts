@@ -2,7 +2,9 @@ import { AuthenticationContext, TokenResponse, ErrorResponse, UserCodeInfo, Logg
 import { Logger, AccessToken } from '../models';
 import persist from 'node-persist';
 
-const MS_LOGIN_URL = "https://login.microsoftonline.com";
+const MS_LOGIN_URL = 'https://login.microsoftonline.com';
+const MS_EXPIRES_ON_FILE = 'persist/microsoft.expiresOn';
+const MS_TOKEN_FILE = 'persist/microsoft.token';
 
 export interface Hash<TValue> {
   [key: string]: TValue;
@@ -16,6 +18,15 @@ class AuthService {
 
   constructor() {
     this.accessTokens = {};
+    var fs = require('fs');
+    if (fs.existsSync(MS_EXPIRES_ON_FILE) && fs.existsSync(MS_TOKEN_FILE)) {
+        const expiresOn = fs.readFileSync(MS_EXPIRES_ON_FILE, 'utf8');
+        const value = fs.readFileSync(MS_TOKEN_FILE, 'utf8');
+        this.accessTokens['https://graph.microsoft.com'] = {
+            expiresOn: expiresOn,
+            value: value
+        };
+    }
   }
 
   public logout(): void {
@@ -49,10 +60,12 @@ export class Auth {
       const now: Date = new Date();
       const accessToken: AccessToken | undefined = this.service.accessTokens[resource];
       const expiresOn: Date = accessToken ? new Date(accessToken.expiresOn) : new Date(0);
-
+      
       // Check if there is still an accessToken available
       if (!fetchNew && accessToken && expiresOn > now) {
         if (debug) {
+		  log.info(`Resource: ${resource}`);
+		  log.info(`Expires on: ${accessToken.expiresOn}`);
           log.info(`Existing access token ${accessToken.value} still valid. Returning...`);
         }
         return accessToken.value;
@@ -80,6 +93,20 @@ export class Auth {
         expiresOn: tokenResponse.expiresOn as string,
         value: tokenResponse.accessToken
       };
+      
+      var fs = require('fs');
+      fs.writeFile(MS_EXPIRES_ON_FILE, tokenResponse.expiresOn, function (err) {
+        if (err) throw err;
+        if (debug){
+            log.info(`${MS_EXPIRES_ON_FILE} saved!`);
+        }
+      });
+      fs.writeFile(MS_TOKEN_FILE, tokenResponse.accessToken, function (err) {
+        if (err) throw err;
+        if (debug){
+            log.info(`${MS_TOKEN_FILE} saved!`);
+        }
+      });
       this.service.refreshToken = tokenResponse.refreshToken;
       this.service.connected = true;
 

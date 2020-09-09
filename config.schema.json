@@ -4,7 +4,7 @@
   "pluginType": "accessory",
   "singular": false,
   "headerDisplay": "Microsoft Graph Presence Switch",
-  "footerDisplay": "Plugin which allows you retrieve your presence via the Microsoft Graph and call your busy light API.",
+  "footerDisplay": "Plugin which allows you retrieve your presence via the Microsoft Graph and call your busy flag API.",
   "schema": {
     "$schema": "http://json-schema.org/draft-07/schema",
     "type": "object",
@@ -25,7 +25,7 @@
         "title": "Azure AD application ID",
         "description": "The GUID of the Azure AD app.",
         "type": "string",
-        "default": ""
+        "default": "66204339-daf1-40fa-aa31-57342272edce"
       },
       "interval": {
         "title": "Interval",
@@ -194,7 +194,7 @@
       "debug": {
         "title": "Debug",
         "type": "boolean",
-        "default": false
+        "default": true
       }
     }
   },
