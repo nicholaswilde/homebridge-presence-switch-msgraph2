@@ -1,6 +1,6 @@
 /// <reference types="hap-nodejs" />
 
-import { Homebridge, HomebridgeAccessory, PresenceConfig, Logger, Presence, Availability, StatusColors, RGB } from '../models';
+import { Homebridge, HomebridgeAccessory, PresenceConfig, Logger, Presence, Availability, StatusAngles, Position } from '../models';
 import persist from 'node-persist';
 import { Auth, splitHours, getUrl } from '../helpers';
 import { MsGraphService, BusyFlagService } from '../services';
@@ -19,22 +19,16 @@ export class PresenceAccessory implements HomebridgeAccessory {
   private auth: Auth = null;
 
   private timeoutIdx: NodeJS.Timeout = null;
-
-  private readonly defaultColors: StatusColors = {
+  
+  private readonly defaultAngles: StatusAngles = {
     available: {
-      red: 0,
-      green: 144,
-      blue: 0
+      angle: 120
     },
     away: {
-      red: 255,
-      green: 191,
-      blue: 0
+      angle: 120
     },
     busy: {
-      red: 179,
-      green: 0,
-      blue: 0
+      angle: 5
     }
   };
 
@@ -44,16 +38,15 @@ export class PresenceAccessory implements HomebridgeAccessory {
     appId: null,
     hostname: null,
     port: 5000,
-    upApi: null,
-    downApi: null,
+    servoApi: null,
+    upAngle: 5,
+    downAngle: 120,
     interval: 1, // Every minute
-    setColorApi: null,
     offApi: null,
     onApi: null,
     startTime: null,
     endTime: null,
-    lightType: null,
-    statusColors: this.defaultColors,
+    statusAngles: this.defaultAngles,
     weekend: false,
     debug: false
   };
@@ -94,7 +87,7 @@ export class PresenceAccessory implements HomebridgeAccessory {
   public getServices() {
     const informationService = new (PresenceAccessory.service as any).AccessoryInformation();
     const characteristic = PresenceAccessory.characteristic;
-    informationService.setCharacteristic(characteristic.Manufacturer, 'Elio Struyf')
+    informationService.setCharacteristic(characteristic.Manufacturer, 'Nicholas Wilde')
                       .setCharacteristic(characteristic.Model, 'Presence Indicator')
                       .setCharacteristic(characteristic.SerialNumber, 'PI_01')
                       .setCharacteristic(characteristic.FirmwareRevision, PresenceAccessory.version);
@@ -121,7 +114,8 @@ export class PresenceAccessory implements HomebridgeAccessory {
       // Turned on
       this.auth = new Auth(this.config.appId, this.storage);
       this.auth.ensureAccessToken(MSGRAPH_URL, this.log, this.config.debug).then(async (accessToken) => {
-        await BusyFlagService.get(this.config.onApi, this.log, this.config.debug);
+        const url = getUrl(this.config.hostname, this.config.port, this.config.onApi);
+        await BusyFlagService.get(url, this.log, this.config.debug);
 
         if (accessToken) {
           this.log.info(`Access token acquired.`);
@@ -151,15 +145,19 @@ export class PresenceAccessory implements HomebridgeAccessory {
         const presence: Presence = await MsGraphService.get(`${MSGRAPH_URL}/${MSGRAPH_PRESENCE_PATH}`, accessToken, this.log, this.config.debug);
         if (presence && presence.availability) {
           const availability = this.getAvailability(presence.availability);
-          let color: RGB = this.config.statusColors[availability.toLowerCase()];
-          if (!color || (!color.red && !color.green && !color.blue)) {
-            color = this.defaultColors[availability.toLowerCase()];
+          let position: Position = this.config.statusAngles[availability.toLowerCase()];
+          if (!position || !position.angle) {
+            position = this.defaultAngles[availability.toLowerCase()];
           }
-          
-          await BusyFlagService.post(this.config.setColorApi, color, this.log, this.config.debug);
+          const url = getUrl(this.config.hostname, this.config.port, this.config.servoApi);
+          if (this.config.debug){
+            this.log.info(`Position: ${JSON.stringify(position)}`);
+          }
+          await BusyFlagService.post(url, position, this.log, this.config.debug);
         }
       } else {
-        await BusyFlagService.get(this.config.offApi, this.log, this.config.debug);
+        const url = getUrl(this.config.hostname, this.config.port, this.config.offApi);
+        await BusyFlagService.get(url, this.log, this.config.debug);
       }
     }
 
@@ -210,7 +208,6 @@ export class PresenceAccessory implements HomebridgeAccessory {
     if (this.config.debug) {
       this.log.info(`startTimeSplit: ${JSON.stringify(startTimeSplit)}.`);
       this.log.info(`endTimeSplit: ${JSON.stringify(endTimeSplit)}.`);
-      this.log.info(getUrl(this.config.hostname, this.config.port, this.config.upApi));
     }
     const crntDate = new Date();
 

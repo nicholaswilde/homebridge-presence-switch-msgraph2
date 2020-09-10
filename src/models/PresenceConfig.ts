@@ -1,4 +1,4 @@
-import { StatusColors } from ".";
+import { StatusAngles } from ".";
 
 export interface PresenceConfig {
   name: string;
@@ -6,16 +6,15 @@ export interface PresenceConfig {
   appId: string;
   hostname: string;
   port: number;
-  upApi: string;
-  downApi: string;
+  servoApi: string;
+  upAngle: number;
+  downAngle: number;
   interval: number;
-  setColorApi: string;
   offApi: string;
   onApi: string;
   startTime: string;
   endTime: string;
-  lightType: string;
-  statusColors: StatusColors;
+  statusAngles: StatusAngles;
   weekend: boolean;
   debug: boolean;
 }

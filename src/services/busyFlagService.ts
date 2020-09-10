@@ -1,18 +1,17 @@
 import { Logger } from "../models";
 import fetch from 'node-fetch';
 
-
 export class BusyFlagService {
 
   /**
    * Do a get request to the busy light
-   * 
-   * @param url 
+   *
+   * @param url
    */
   public static async get(url: string, log: Logger, debug: boolean = false) {
     try {
       if (debug) {
-        log.info(`Calling the busy flag API: ${url}`);
+        log.info(`Calling the busy flag get API: ${url}`);
       }
       const data = await fetch(url);
       if (debug) {
@@ -25,18 +24,18 @@ export class BusyFlagService {
 
   /**
    * Do a post request to the busy flag
-   * 
-   * @param url 
+   *
+   * @param url
    */
   public static async post(url: string, body: any, log: Logger, debug: boolean = false) {
     try {
       if (debug) {
-        log.info(`Calling the busy flag API: ${url} - ${JSON.stringify(body)}`);
+        log.info(`Calling the busy flag post API: ${url} - ${JSON.stringify(body)}`);
       }
-      const data = await fetch(url, { 
-        method: "POST", 
+      const data = await fetch(url, {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json" 
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(body)
       });

@@ -5,4 +5,4 @@ export * from './HomebridgeAccessory';
 export * from './Logger';
 export * from './Presence';
 export * from './PresenceConfig';
-export * from './StatusColors';
+export * from './StatusAngles';

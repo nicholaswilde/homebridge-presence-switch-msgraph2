@@ -11,9 +11,11 @@
     "required": [
       "name",
       "appId",
-      "upApi",
-      "downApi",
-      "setColorApi",
+      "hostname",
+      "port",
+      "servoApi",
+      "upAngle",
+      "downAngle",
       "offApi",
       "onApi"
     ],
@@ -41,17 +43,23 @@
         "type": "integer",
         "default": 5000
       },
-      "upApi": {
-        "title": "Up API",
-        "description": "API to turn up your device",
+      "servoApi": {
+        "title": "Servo API",
+        "description": "API of the servo motor",
         "type": "string",
-        "default": "http://192.168.1.192:5000/api/up/"
+        "default": "/api/servo"
       },
-      "downApi": {
-        "title": "Down API",
-        "description": "API to turn down your device",
-        "type": "string",
-        "default": "http://192.168.1.192:5000/api/down"
+      "upAngle": {
+        "title": "Up Angle",
+        "description": "Up angle of the servo motor",
+        "type": "integer",
+        "default": 5
+      },
+      "downAngle": {
+        "title": "Down Angle",
+        "description": "Down angle of the servo motor",
+        "type": "integer",
+        "default": 120
       },
       "interval": {
         "title": "Interval",
@@ -59,23 +67,17 @@
         "type": "integer",
         "default": 1
       },
-      "setColorApi": {
-        "title": "Set color API",
-        "description": "API to set the color",
-        "type": "string",
-        "default": "http://192.168.1.192:5000/api/switch"
-      },
       "offApi": {
         "title": "Off API",
         "description": "API to turn off your device",
         "type": "string",
-        "default": "http://192.168.1.192:5000/api/off"
+        "default": "/api/off"
       },
       "onApi": {
         "title": "On API",
         "description": "API to turn on your device",
         "type": "string",
-        "default": "http://192.168.1.192:5000/api/on"
+        "default": "/api/on"
       },
       "startTime": {
         "title": "Start time",
@@ -95,39 +97,25 @@
         "type": "boolean",
         "default": false
       },
-      "statusColors": {
-        "title": "Status color",
-        "description": "Define the color values for the following states: 'available', 'busy', and 'away'.",
+      "statusAngles": {
+        "title": "Status anges",
+        "description": "Define the angle values for the following states: 'available', 'busy', and 'away'.",
         "type": "object",
         "default": {},
         "properties": {
           "available": {
             "type": "object",
             "title": "Available",
-            "description": "The color for when you are available.",
+            "description": "The angle for when you are available.",
             "default": {},
             "required": [
-              "red",
-              "green",
-              "blue"
+              "angle"
             ],
             "properties": {
-              "red": {
+              "angle": {
                 "type": "integer",
-                "title": "Red",
-                "description": "Value between: 0 - 255.",
-                "default": 0
-              },
-              "green": {
-                "type": "integer",
-                "title": "Green",
-                "description": "Value between: 0 - 255.",
-                "default": 144
-              },
-              "blue": {
-                "type": "integer",
-                "title": "Blue",
-                "description": "Value between: 0 - 255.",
+                "title": "Angle",
+                "description": "Value between: 0 - 180.",
                 "default": 0
               }
             }
@@ -135,31 +123,17 @@
           "away": {
             "type": "object",
             "title": "Away",
-            "description": "The color for when you are away.",
+            "description": "The angle for when you are away.",
             "default": {},
             "required": [
-              "red",
-              "green",
-              "blue"
+              "angle"
             ],
             "properties": {
-              "red": {
+              "angle": {
                 "type": "integer",
-                "title": "Red",
-                "description": "Value between: 0 - 255.",
-                "default": 255
-              },
-              "green": {
-                "type": "integer",
-                "title": "Green",
-                "description": "Value between: 0 - 255.",
-                "default": 191
-              },
-              "blue": {
-                "type": "integer",
-                "title": "Blue",
-                "description": "Value between: 0 - 255.",
-                "default": 0
+                "title": "Angle",
+                "description": "Value between: 0 - 180.",
+                "default": 120
               }
             }
           },
@@ -169,56 +143,18 @@
             "description": "The color for when you are busy.",
             "default": {},
             "required": [
-              "red",
-              "green",
-              "blue"
+              "angle"
             ],
             "properties": {
-              "red": {
+              "angle": {
                 "type": "integer",
-                "title": "Red",
-                "description": "Value between: 0 - 255.",
-                "default": 179
-              },
-              "green": {
-                "type": "integer",
-                "title": "Green",
-                "description": "Value between: 0 - 255.",
-                "default": 0
-              },
-              "blue": {
-                "type": "integer",
-                "title": "Blue",
-                "description": "Value between: 0 - 255.",
-                "default": 0
+                "title": "Angle",
+                "description": "Value between: 0 - 180.",
+                "default": 120
               }
             }
           }
         }
-      },
-      "lightType": {
-        "title": "Light type",
-        "description": "Define the type of light you want to show.",
-        "type": "string",
-        "default": "switch",
-        "oneOf": [
-          {
-            "title": "default",
-            "enum": [ "" ]
-          },
-          {
-            "title": "Always on",
-            "enum": [ "on" ]
-          },
-          {
-            "title": "Blink",
-            "enum": [ "blink" ]
-          },
-          {
-            "title": "Hearthbeat",
-            "enum": [ "hearthbeat" ]
-          }
-        ]
       },
       "debug": {
         "title": "Debug",
