@@ -2,7 +2,7 @@
 
 import { Homebridge, HomebridgeAccessory, PresenceConfig, Logger, Presence, Availability, StatusColors, RGB } from '../models';
 import persist from 'node-persist';
-import { Auth, splitHours } from '../helpers';
+import { Auth, splitHours, getUrl } from '../helpers';
 import { MsGraphService, BusyFlagService } from '../services';
 
 const MSGRAPH_URL = `https://graph.microsoft.com`;
@@ -155,6 +155,7 @@ export class PresenceAccessory implements HomebridgeAccessory {
           if (!color || (!color.red && !color.green && !color.blue)) {
             color = this.defaultColors[availability.toLowerCase()];
           }
+          
           await BusyFlagService.post(this.config.setColorApi, color, this.log, this.config.debug);
         }
       } else {
@@ -209,6 +210,7 @@ export class PresenceAccessory implements HomebridgeAccessory {
     if (this.config.debug) {
       this.log.info(`startTimeSplit: ${JSON.stringify(startTimeSplit)}.`);
       this.log.info(`endTimeSplit: ${JSON.stringify(endTimeSplit)}.`);
+      this.log.info(getUrl(this.config.hostname, this.config.port, this.config.upApi));
     }
     const crntDate = new Date();
 
