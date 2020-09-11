@@ -1,4 +1,4 @@
-import { StatusAngles } from ".";
+import { PositionAngles, StatusPositions } from ".";
 
 export interface PresenceConfig {
   name: string;
@@ -14,7 +14,8 @@ export interface PresenceConfig {
   onApi: string;
   startTime: string;
   endTime: string;
-  statusAngles: StatusAngles;
+  positionAngles: PositionAngles;
+  statusPositions: StatusPositions;
   weekend: boolean;
   debug: boolean;
 }

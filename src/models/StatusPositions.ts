@@ -1,9 +1,9 @@
-export interface StatusAngles {
+export interface StatusPositions {
   available: Position;
   away: Position;
   busy: Position;
 }
 
 export interface Position {
-  angle: number;
+  position: string;
 }

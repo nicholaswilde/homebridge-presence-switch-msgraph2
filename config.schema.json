@@ -49,17 +49,26 @@
         "type": "string",
         "default": "/api/servo"
       },
-      "upAngle": {
-        "title": "Up Angle",
-        "description": "Up angle of the servo motor",
-        "type": "integer",
-        "default": 5
-      },
-      "downAngle": {
-        "title": "Down Angle",
-        "description": "Down angle of the servo motor",
-        "type": "integer",
-        "default": 120
+      "angle": {
+        "type": "object",
+        "title": "Angles",
+        "description": "The color for when you are busy.",
+        "default": {},
+        "required": ["up", "down"],
+        "properties": {
+          "up": {
+            "title": "Up Angle",
+            "description": "Up angle of the servo motor",
+            "type": "integer",
+            "default": 5
+          },
+          "down": {
+            "title": "Down Angle",
+            "description": "Down angle of the servo motor",
+            "type": "integer",
+            "default": 120
+          }
+        }
       },
       "interval": {
         "title": "Interval",
@@ -109,14 +118,18 @@
             "description": "The angle for when you are available.",
             "default": {},
             "required": [
-              "angle"
+              "position"
             ],
             "properties": {
-              "angle": {
-                "type": "integer",
-                "title": "Angle",
+              "position": {
+                "type": "string",
+                "title": "Position",
                 "description": "Value between: 0 - 180.",
-                "default": 0
+                "default": "down",
+                "oneOf": [
+                  { "title": "Up", "enum": ["up"] },
+                  { "title": "Down", "enum": ["down"] }
+                ]
               }
             }
           },
@@ -126,14 +139,18 @@
             "description": "The angle for when you are away.",
             "default": {},
             "required": [
-              "angle"
+              "position"
             ],
             "properties": {
-              "angle": {
-                "type": "integer",
-                "title": "Angle",
+              "position": {
+                "type": "string",
+                "title": "Position",
                 "description": "Value between: 0 - 180.",
-                "default": 120
+                "default": "down",
+                "oneOf": [
+                  { "title": "Up", "enum": ["up"] },
+                  { "title": "Down", "enum": ["down"] }
+                ]
               }
             }
           },
@@ -146,11 +163,15 @@
               "angle"
             ],
             "properties": {
-              "angle": {
-                "type": "integer",
-                "title": "Angle",
+              "position": {
+                "type": "string",
+                "title": "Position",
                 "description": "Value between: 0 - 180.",
-                "default": 120
+                "default": "up",
+                "oneOf": [
+                  { "title": "Up", "enum": ["up"] },
+                  { "title": "Down", "enum": ["down"] }
+                ]
               }
             }
           }

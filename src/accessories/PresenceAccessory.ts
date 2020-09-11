@@ -1,7 +1,8 @@
 /// <reference types="hap-nodejs" />
 
-import { Homebridge, HomebridgeAccessory, PresenceConfig, Logger, Presence, Availability, StatusAngles, Position } from '../models';
 import persist from 'node-persist';
+import { Homebridge, HomebridgeAccessory, PresenceConfig } from '../models';
+import { Logger, Presence, Availability, PositionAngles, Position, StatusPositions } from '../models';
 import { Auth, splitHours, getUrl } from '../helpers';
 import { MsGraphService, BusyFlagService } from '../services';
 
@@ -20,15 +21,24 @@ export class PresenceAccessory implements HomebridgeAccessory {
 
   private timeoutIdx: NodeJS.Timeout = null;
   
-  private readonly defaultAngles: StatusAngles = {
-    available: {
+  private readonly defaultAngles: PositionAngles = {
+    up: {
+      angle: 5
+    },
+    down: {
       angle: 120
+    }
+  };
+  
+  private readonly defaultPositions: StatusPositions = {
+    available: {
+      position: "down"
     },
     away: {
-      angle: 120
+      position: "down"
     },
     busy: {
-      angle: 5
+      position: "up"
     }
   };
 
@@ -46,7 +56,8 @@ export class PresenceAccessory implements HomebridgeAccessory {
     onApi: null,
     startTime: null,
     endTime: null,
-    statusAngles: this.defaultAngles,
+    positionAngles: this.defaultAngles,
+    statusPositions: this.defaultPositions,
     weekend: false,
     debug: false
   };
@@ -145,8 +156,8 @@ export class PresenceAccessory implements HomebridgeAccessory {
         const presence: Presence = await MsGraphService.get(`${MSGRAPH_URL}/${MSGRAPH_PRESENCE_PATH}`, accessToken, this.log, this.config.debug);
         if (presence && presence.availability) {
           const availability = this.getAvailability(presence.availability);
-          let position: Position = this.config.statusAngles[availability.toLowerCase()];
-          if (!position || !position.angle) {
+          let position: Position = this.config.statusPositions[availability.toLowerCase()];
+          if (!position || !position.position) {
             position = this.defaultAngles[availability.toLowerCase()];
           }
           const url = getUrl(this.config.hostname, this.config.port, this.config.servoApi);
