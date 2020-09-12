@@ -7,8 +7,6 @@ export interface PresenceConfig {
   hostname: string;
   port: number;
   servoApi: string;
-  upAngle: number;
-  downAngle: number;
   interval: number;
   offApi: string;
   onApi: string;

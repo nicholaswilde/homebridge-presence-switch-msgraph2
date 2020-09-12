@@ -49,33 +49,6 @@
         "type": "string",
         "default": "/api/servo"
       },
-      "angle": {
-        "type": "object",
-        "title": "Angles",
-        "description": "The color for when you are busy.",
-        "default": {},
-        "required": ["up", "down"],
-        "properties": {
-          "up": {
-            "title": "Up Angle",
-            "description": "Up angle of the servo motor",
-            "type": "integer",
-            "default": 5
-          },
-          "down": {
-            "title": "Down Angle",
-            "description": "Down angle of the servo motor",
-            "type": "integer",
-            "default": 120
-          }
-        }
-      },
-      "interval": {
-        "title": "Interval",
-        "description": "Polling interval.",
-        "type": "integer",
-        "default": 1
-      },
       "offApi": {
         "title": "Off API",
         "description": "API to turn off your device",
@@ -106,74 +79,69 @@
         "type": "boolean",
         "default": false
       },
-      "statusAngles": {
-        "title": "Status anges",
-        "description": "Define the angle values for the following states: 'available', 'busy', and 'away'.",
+      "interval": {
+        "title": "Interval",
+        "description": "Polling interval.",
+        "type": "integer",
+        "default": 1
+      },
+       "positionAngle": {
+        "type": "object",
+        "title": "Position Angles",
+        "description": "The angles of each flag position.",
+        "default": {},
+        "required": ["up", "down"],
+        "properties": {
+          "up": {
+            "title": "Up",
+            "description": "Up angle of the servo motor",
+            "type": "integer",
+            "default": 5
+          },
+          "down": {
+            "title": "Down",
+            "description": "Down angle of the servo motor",
+            "type": "integer",
+            "default": 120
+          }
+        }
+      },
+      "statusPositions": {
+        "title": "Status Positions",
+        "description": "Define the positions for the following statuses: 'available', 'busy', and 'away'.",
         "type": "object",
         "default": {},
+        "required": ["available", "away", "busy"],
         "properties": {
           "available": {
-            "type": "object",
+            "type": "string",
             "title": "Available",
-            "description": "The angle for when you are available.",
-            "default": {},
-            "required": [
-              "position"
-            ],
-            "properties": {
-              "position": {
-                "type": "string",
-                "title": "Position",
-                "description": "Value between: 0 - 180.",
-                "default": "down",
+            "description": "The flag position for when you are available.",
+            "default": "down",
                 "oneOf": [
                   { "title": "Up", "enum": ["up"] },
                   { "title": "Down", "enum": ["down"] }
                 ]
-              }
-            }
           },
           "away": {
-            "type": "object",
+            "type": "string",
             "title": "Away",
-            "description": "The angle for when you are away.",
-            "default": {},
-            "required": [
-              "position"
-            ],
-            "properties": {
-              "position": {
-                "type": "string",
-                "title": "Position",
-                "description": "Value between: 0 - 180.",
-                "default": "down",
+            "description": "The flag position for when you are away.",
+            "default": "down",
                 "oneOf": [
                   { "title": "Up", "enum": ["up"] },
                   { "title": "Down", "enum": ["down"] }
                 ]
-              }
-            }
           },
           "busy": {
-            "type": "object",
+            "type": "string",
             "title": "Busy",
-            "description": "The color for when you are busy.",
-            "default": {},
-            "required": [
-              "angle"
-            ],
-            "properties": {
-              "position": {
-                "type": "string",
-                "title": "Position",
-                "description": "Value between: 0 - 180.",
-                "default": "up",
+            "description": "The flag position for when you are busy.",
+            "default": "up",
                 "oneOf": [
                   { "title": "Up", "enum": ["up"] },
                   { "title": "Down", "enum": ["down"] }
                 ]
-              }
-            }
           }
         }
       },

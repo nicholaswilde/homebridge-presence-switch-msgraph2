@@ -2,7 +2,7 @@
 
 import persist from 'node-persist';
 import { Homebridge, HomebridgeAccessory, PresenceConfig } from '../models';
-import { Logger, Presence, Availability, PositionAngles, Position, StatusPositions } from '../models';
+import { Logger, Presence, Availability, PositionAngles, StatusPositions } from '../models';
 import { Auth, splitHours, getUrl } from '../helpers';
 import { MsGraphService, BusyFlagService } from '../services';
 
@@ -22,24 +22,14 @@ export class PresenceAccessory implements HomebridgeAccessory {
   private timeoutIdx: NodeJS.Timeout = null;
   
   private readonly defaultAngles: PositionAngles = {
-    up: {
-      angle: 5
-    },
-    down: {
-      angle: 120
-    }
+    up: 5,
+    down: 120
   };
   
   private readonly defaultPositions: StatusPositions = {
-    available: {
-      position: "down"
-    },
-    away: {
-      position: "down"
-    },
-    busy: {
-      position: "up"
-    }
+    available: "down",
+    away: "down",
+    busy: "up"
   };
 
   private config: PresenceConfig = {
@@ -49,8 +39,6 @@ export class PresenceAccessory implements HomebridgeAccessory {
     hostname: null,
     port: 5000,
     servoApi: null,
-    upAngle: 5,
-    downAngle: 120,
     interval: 1, // Every minute
     offApi: null,
     onApi: null,
@@ -156,15 +144,22 @@ export class PresenceAccessory implements HomebridgeAccessory {
         const presence: Presence = await MsGraphService.get(`${MSGRAPH_URL}/${MSGRAPH_PRESENCE_PATH}`, accessToken, this.log, this.config.debug);
         if (presence && presence.availability) {
           const availability = this.getAvailability(presence.availability);
-          let position: Position = this.config.statusPositions[availability.toLowerCase()];
-          if (!position || !position.position) {
-            position = this.defaultAngles[availability.toLowerCase()];
+          
+          
+          let position = this.config.statusPositions[availability.toLowerCase()];
+          if (!position) {
+            position = this.defaultPositions[availability.toLowerCase()];
+          }
+          let angle = this.config.positionAngles[position];
+          if (!angle) {
+            angle = this.defaultAngles[position];
           }
           const url = getUrl(this.config.hostname, this.config.port, this.config.servoApi);
           if (this.config.debug){
-            this.log.info(`Position: ${JSON.stringify(position)}`);
+            this.log.info(`Position: ${position}`);
+            this.log.info(`Angle: ${angle}`);
           }
-          await BusyFlagService.post(url, position, this.log, this.config.debug);
+          await BusyFlagService.post(url, angle, this.log, this.config.debug);
         }
       } else {
         const url = getUrl(this.config.hostname, this.config.port, this.config.offApi);
